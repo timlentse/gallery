@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Gallery</title>
+    <%= csrf_meta_tags %>
+
+    <%= stylesheet_link_tag    'application', media: 'all' %>
+    <%= javascript_include_tag 'application' %>
+  </head>
+
+  <body>
+    <%= render 'layouts/sidebar' %>
+    <!-- 这是显示notices模块 !-->
+    <% if flash[:notice] %>
+      <div style='display: block;' id='toast'><p><%= flash[:notice] %></p></div>
+      <script>
+$("#toast").fadeOut(4000);
+      </script>
+    <% else %>
+      <div style='display: none;' id='toast'><p></p></div>
+    <% end %>
+    <div class='container'>
+      <%= yield %>
+    </div>
+    </div>
+  </body>
+</html>

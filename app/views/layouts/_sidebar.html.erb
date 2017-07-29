@@ -1,0 +1,11 @@
+<div class='sidebar'>
+  <div class='title'>Tags</div>
+  <ul id="tags">
+    <% @tags.each do |tag| %>
+      <li class='droppable' data-tag-id='<%= tag.id %>'> > <%= link_to tag.name, tag_path(tag) %></li>
+    <% end %>
+  </ul>
+  <div id='upload-button'>
+    <a href='<%= new_image_path %>' >上传图片</a>
+  </div>
+</div>

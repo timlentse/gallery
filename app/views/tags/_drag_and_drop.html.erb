@@ -1,0 +1,44 @@
+<script type="text/javascript">
+$(function(){
+  $(".item").draggable({
+    revert: "invalid",
+    cursor: "move",
+    cursorAt: { top: 0, left: 50 },
+    helper: function(event) {
+      var url = $(this).find('.img img').attr('src');
+      url = url.replace("w/180/h/120","w/90/h/60");
+      return $("<img style='border-radius:4px;' src='"+url+"'>");
+    }
+  });
+
+  $(".droppable").droppable({
+    accept: ".item",
+    classes: {
+      "ui-droppable-hover": "ui-state-highlight"
+    },
+    drop: function(event, ui){
+      var image_id = ui.draggable.find('.img').attr('data-image-id');
+      var csrf_token = $('meta[name=csrf-token]').attr('content');
+      var tag_id = $(this).attr('data-tag-id');
+      $.ajax({
+        type: 'PATCH',
+        url: '/images/'+image_id,
+        data: {authenticity_token: csrf_token, tag_id: tag_id},
+        success: function(data){
+          if(data.code==0){
+            window.location.reload();
+          }
+          $('#toast p').html(data.msg);
+          $("#toast").show();
+          $("#toast").fadeOut(4000);
+        },
+        error: function(){
+          $('#toast p').html("修改tag失败");
+          $("#toast").show();
+          $("#toast").fadeOut(4000);
+        }
+      });
+    }
+  });
+})
+</script>

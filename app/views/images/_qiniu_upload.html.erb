@@ -1,0 +1,49 @@
+<script type="text/javascript">
+$(function(){
+  var fadeTimeOut = 4000;
+  var uploader = Qiniu.uploader({
+    runtimes: 'html5,html4,flash',
+    browse_button: 'pick-images',
+    max_file_size: '100mb',
+    dragdrop: true,
+    chunk_size: '4mb',
+    uptoken:'',
+    uptoken_url: '/qiniu_uptokens',
+    domain: "http://<%= Settings.qiniu.domain %>",
+    auto_start: true,
+    multi_selection: false,
+    unique_names: true,
+    init: {
+      'FilesAdded': function(up, files){
+        $('#toast p').html("图片上传中...");
+        $('#toast').show();
+      },
+      'BeforeUpload': function(up, file){
+      },
+      'UploadProgress': function(up, file){
+        $('#toast p').html("图片"+file.name+"已上传"+file.percent+"%...");
+      },
+      'UploadComplete': function(){
+        $("#toast").fadeOut(fadeTimeOut);
+      },
+      'FileUploaded': function(up, file, info){
+        var res = $.parseJSON(info);
+        var url = up.getOption('domain')+"/"+encodeURI(res.key);
+        $('#toast p').html("图片"+file.name+"上传成功");
+        $("#image_url").val(url);
+        addModuleBox(url)
+      },
+      'Error': function(up, err, errTip){
+        $("#toast p").html(errTip);
+        $("#toast").fadeOut(fadeTimeOut);
+      }
+    }
+  });
+  function addModuleBox(url){
+    var module = $('.module');
+    $("#image_url").val(url);
+    var html = '<div class="box"><img src="'+url+'?imageView2/1/w/200/h/200"></div>';
+    module.html(html);
+  }
+})
+</script>

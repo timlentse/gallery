@@ -1,0 +1,10 @@
+<div class='item'>
+  <div class="img" data-image-id='<%= image.id %>'>
+    <img src='<%= image.url %>?imageView2/1/w/180/h/120'>
+  </div>
+  <div class='desc'>
+    <p>Title: <strong><%= image.title %></strong></p>
+    <p>Date: <%= image.created_at.strftime('%Y/%m/%d') %></p>
+    <p style="padding-bottom:0.5em">Tag: <span class='tag-name' data-tag-id='<%= @tag.id %>'><%= @tag.name %></span></p>
+  </div>
+</div>

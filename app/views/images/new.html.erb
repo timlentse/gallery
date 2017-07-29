@@ -1,0 +1,18 @@
+<div class='upload-panel'>
+  <div id='pick-images'>选择图片</div>
+  <%= form_for @image do |f| %>
+    <div class='field'>
+      <input name='tag_name' placeholder='请输入标签名称'>
+    </div>
+    <div class='field'>
+      <%= f.text_field :title, placeholder: '请输入标题名称'%>
+    </div>
+    <%= f.hidden_field :url %>
+    <div class='module'>
+    </div>
+    <div class='submit'>
+      <%= f.submit '上传' %>
+    </div>
+  <% end %>
+  <%= render 'images/qiniu_upload' %>
+</div>
