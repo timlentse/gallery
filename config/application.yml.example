@@ -1,0 +1,17 @@
+defaults: &defaults
+  qiniu:
+    bucket: your-qiniu-bucket
+    domain: your-qiniu-domain
+    access_key: qiniu-ak
+    secret_key: qiniu-sk
+  kaminari_perpage: 8
+
+development:
+  <<: *defaults
+  neat_setting: 800
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults
