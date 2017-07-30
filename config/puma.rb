@@ -23,7 +23,7 @@ stdout_redirect "#{app_dir}/log/puma.log", "#{app_dir}/log/puma.err", true
 
 bind "unix://#{app_dir}/tmp/sockets/puma.sock"
 
-state_path "#{app_dir}/tmp/pid/puma.state"
+state_path "#{app_dir}/tmp/pids/puma.state"
 
 # Use the `preload_app!` method when specifying a `workers` number.
 # This directive tells Puma to first boot the application and load code
