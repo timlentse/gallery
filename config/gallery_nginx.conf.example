@@ -1,0 +1,21 @@
+upstream gallery.timlentse.com{
+  server unix:///home/ubuntu/gallery/current/tmp/sockets/puma.sock;
+}
+
+server{
+  server_name gallery.timlentse.com;
+  listen 80;
+
+  root /home/ubuntu/gallery/current/public;
+  access_log /home/ubuntu/gallery/current/log/access.log;
+  error_log /home/ubuntu/gallery/current/log/error.log;
+
+  try_files $uri @app;
+
+  location @app{
+    proxy_pass http://gallery.timlentse.com;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Origin http://$Host;
+    proxy_set_header Host $Host;
+  }
+}

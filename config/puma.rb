@@ -1,23 +1,16 @@
-# Puma can serve each request in a thread from an internal thread pool.
-# The `threads` method setting takes two numbers: a minimum and maximum.
-# Any libraries that use thread pools should be configured to match
-# the maximum value specified for Puma. Default is set to 5 threads for minimum
-# and maximum; this matches the default thread size of Active Record.
-#
-
+# Puma config file
 app_dir = "/home/ubuntu/gallery/current"
 directory app_dir
 
-threads_count = ENV.fetch("RAILS_MAX_THREADS") { 5 }
-threads threads_count, threads_count
-
 # Specifies the `environment` that Puma will run in.
-
 environment ENV.fetch("RAILS_ENV") { "development" }
+
+pidfile "#{app_dir}/tmp/pids/puma.pid"
 
 workers 1
 
-pidfile "#{app_dir}/tmp/pids/puma.pid"
+threads_count = ENV.fetch("RAILS_MAX_THREADS") { 5 }
+threads threads_count, threads_count
 
 stdout_redirect "#{app_dir}/log/puma.log", "#{app_dir}/log/puma.err", true
 
@@ -52,7 +45,7 @@ end
 on_worker_boot do
   ActiveRecord::Base.establish_connection if defined?(ActiveRecord)
 end
-#
+
 
 # Allow puma to be restarted by `rails restart` command.
 plugin :tmp_restart
