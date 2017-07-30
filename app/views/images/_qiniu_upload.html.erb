@@ -1,5 +1,15 @@
 <script type="text/javascript">
 $(function(){
+
+  // Add module when image uploaded
+  function addModuleBox(url){
+    var module = $('.module');
+    $("#image_url").val(url);
+    var html = '<div class="box"><img src="'+url+'?imageView2/1/w/200/h/200"></div>';
+    module.html(html);
+  }
+
+  // Qiniu js upload logic
   var fadeTimeOut = 4000;
   var uploader = Qiniu.uploader({
     runtimes: 'html5,html4,flash',
@@ -7,7 +17,6 @@ $(function(){
     max_file_size: '100mb',
     dragdrop: true,
     chunk_size: '4mb',
-    uptoken:'',
     uptoken_url: '/qiniu_uptokens',
     domain: "http://<%= Settings.qiniu.domain %>",
     auto_start: true,
@@ -39,11 +48,5 @@ $(function(){
       }
     }
   });
-  function addModuleBox(url){
-    var module = $('.module');
-    $("#image_url").val(url);
-    var html = '<div class="box"><img src="'+url+'?imageView2/1/w/200/h/200"></div>';
-    module.html(html);
-  }
 })
 </script>

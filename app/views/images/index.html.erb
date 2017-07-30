@@ -1,0 +1,143 @@
+<div class='list-panel'>
+  <div class='title'>
+    <% if params[:controller]=='images' && params[:action]=='index' %>
+      <h1>All My Photos</h1>
+    <% else %>
+      <h1>Photos in <%= @tag.name %></h1>
+    <% end %>
+  </div>
+  <div id='items' class='items'>
+    <%= render partial: 'images/image', collection: @images %>
+    <div class="paginator">
+      <%= paginate @images, remote: true %>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">    
+
+// Tag editable bind
+function bindTagEditable(){  
+  $('.tag-name').click(function(){
+    var tag_id = $(this).attr('data-tag-id');
+    var image_id = $(this).parent().parent().siblings('.img').attr('data-image-id');
+    var ori_tag_name = $(this).html();
+    var this_element= $(this);
+    if($(this).find('input').length == 0){
+      $(this).html('<input type="text" value="' + $(this).text() + '" />').find('input').focus().blur(function(){    
+        var tag_name = $(this).val();
+        var csrf_token = $('meta[name=csrf-token]').attr('content');
+        $.ajax({
+          type: 'PATCH',
+          url: '/images/'+image_id,
+          data: {authenticity_token: csrf_token, tag_name: tag_name},
+          success: function(data){
+            if(data.code==0){
+              window.location.reload();
+            }else{
+              this_element.html(ori_tag_name);
+            }
+            $('#toast p').html(data.msg);
+            $("#toast").show();
+            $("#toast").fadeOut(4000);
+          },
+          error: function(){
+            this_element.html(ori_tag_name);
+            $('#toast p').html("修改tag失败");
+            $("#toast").show();
+            $("#toast").fadeOut(4000);
+          }
+        });
+      });
+    }
+  }).hover(function(){
+    $(this).addClass('hover');
+  },function(){
+    $(this).removeClass('hover');
+  });
+};
+
+bindTagEditable();
+</script>
+<script type="text/javascript">
+
+// Draggable bind
+function bindDraggable(){
+  $(".item").draggable({
+    revert: "invalid",
+    cursor: "move",
+    cursorAt: { top: 0, left: 50 },
+    helper: function(event) {
+      var url = $(this).find('.img img').attr('src');
+      url = url.replace("w/180/h/120","w/90/h/60");
+      return $("<img style='border-radius:4px;' src='"+url+"'>");
+    }
+  });
+};
+
+// Droppable bind
+function bindDroppable(){
+  $(".droppable").droppable({
+    accept: ".item",
+    classes: {
+      "ui-droppable-hover": "ui-state-highlight"
+    },
+    drop: function(event, ui){
+      var image_id = ui.draggable.find('.img').attr('data-image-id');
+      var csrf_token = $('meta[name=csrf-token]').attr('content');
+      var tag_id = $(this).attr('data-tag-id');
+      $.ajax({
+        type: 'PATCH',
+        url: '/images/'+image_id,
+        data: {authenticity_token: csrf_token, tag_id: tag_id},
+        success: function(data){
+          if(data.code==0){
+            window.location.reload();
+          }
+          $('#toast p').html(data.msg);
+          $("#toast").show();
+          $("#toast").fadeOut(4000);
+        },
+        error: function(){
+          $('#toast p').html("修改tag失败");
+          $("#toast").show();
+          $("#toast").fadeOut(4000);
+        }
+      });
+    }
+  })
+};
+
+bindDraggable();
+bindDroppable();
+</script>
+<script type="text/javascript">
+$(function(){
+  $(document.body).off('click', 'nav.pagination a');
+  $(document.body).on('click', 'nav.pagination a', function(e) {
+    e.preventDefault();
+    var url = $(this).attr("href");
+    $('#toast p').html("正在加载...");
+    $("#toast").show();
+    $("#items").load(url, function(){
+      window.history.pushState(url, window.title, url);
+      $("#toast").hide();
+      bindTagEditable();
+      bindDraggable();
+      bindDroppable();
+    });
+    return false;
+  });
+
+  $(window).bind('popstate', function(event) {
+    var url = location.href;
+    $('#toast p').html("正在加载...");
+    $("#toast").show();
+    $("#items").load(url, function(){
+      $("#toast").hide();
+      bindTagEditable();
+      bindDraggable();
+      bindDroppable();
+    });
+  });
+});
+</script>

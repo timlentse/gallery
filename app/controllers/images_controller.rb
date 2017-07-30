@@ -6,6 +6,16 @@ class ImagesController < ApplicationController
     @image = Image.new
   end
 
+  def index
+    @images = Image.includes(:tag).order(updated_at: :desc).page(params[:page] || 1)
+    # If ajax request, not render layout
+    if request.xhr?
+      render 'images/partial', layout: false
+    else
+      render :index
+    end
+  end
+
   def create
     @image = Image.new(@image_params)
     @tag = Tag.find_or_initialize_by(name: params[:tag_name])
@@ -14,7 +24,7 @@ class ImagesController < ApplicationController
       redirect_to tag_path(@tag), notice: '图片上传成功!'
     else
       error_msg = @tag.errors.messages.values.join(';') 
-      flash[:notice] = error_msg
+      flash.now[:notice] = error_msg
       render :new
     end
   end

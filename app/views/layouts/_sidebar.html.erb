@@ -1,5 +1,5 @@
 <div class='sidebar'>
-  <div class='title'>Tags</div>
+  <div class='title'><h2><a href='<%= root_path %>'>Tags</a></h2></div>
   <ul id="tags">
     <% @tags.each do |tag| %>
       <li class='droppable' data-tag-id='<%= tag.id %>'> > <%= link_to tag.name, tag_path(tag) %></li>

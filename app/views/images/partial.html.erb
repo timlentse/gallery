@@ -1,0 +1,4 @@
+<%= render partial: 'images/image', collection: @images %>
+<div class="paginator">
+  <%= paginate @images, remote: true %>
+</div>
